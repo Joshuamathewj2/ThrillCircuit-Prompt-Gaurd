@@ -1,0 +1,97 @@
+app_name: "Antigravity Prompt Guard"
+version: "1.0.0"
+
+settings:
+  thresholds:
+    low: 10
+    medium: 30
+    high: 60
+  max_length: 1000
+  heuristics:
+    repetition_check: true
+    complexity_check: true
+
+languages:
+  - en
+  - es
+  - fr
+
+rules:
+  - id: "INJ_001"
+    description: "Direct instruction override attempt"
+    pattern: "(?i)(ignore|forget|disregard|skip)\\s+(all\\s+)?(previous|prior|above)\\s+(instruction|command|direction|context)"
+    weight: 50
+    category: "INSTRUCTION_OVERRIDE"
+    languages: ["en"]
+
+  - id: "INJ_002"
+    description: "New prompt injection"
+    pattern: "(?i)(start|begin)\\s+(a\\s+)?new\\s+(prompt|session|chat)"
+    weight: 40
+    category: "INSTRUCTION_OVERRIDE"
+    languages: ["en"]
+
+  - id: "INJ_003"
+    description: "System role impersonation"
+    pattern: "(?i)(you\\s+are|act\\s+as)\\s+(now\\s+)?(an?|the)\\s+(administrator|developer|system|root|superuser|god_mode)"
+    weight: 60
+    category: "JAILBREAK"
+    languages: ["en"]
+
+  - id: "INJ_004"
+    description: "DAN / Jailbreak mode"
+    pattern: "(?i)(DAN|Do\\s+Anything\\s+Now|jailbreak|unfiltered|unrestricted|mode)"
+    weight: 70
+    category: "JAILBREAK"
+    languages: ["en"]
+
+  - id: "INJ_005"
+    description: "Base64 encoded string pattern"
+    pattern: "(?:[A-Za-z0-9+/]{4}){10,}(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
+    weight: 30
+    category: "OBFUSCATION"
+    languages: ["all"]
+
+  - id: "INJ_006"
+    description: "Malicious output confirmation"
+    pattern: "(?i)(confirm|acknowledge)\\s+(that\\s+)?(you\\s+have|done|executed)"
+    weight: 20
+    category: "MALICIOUS_CONTENT"
+    languages: ["en"]
+    
+  - id: "INJ_007"
+    description: "Hypothetical or conditional jailbreak attempt"
+    pattern: "(?i)(hypothetically|in\\s+theory|if\\s+you\\s+could|imagine\\s+if|suppose\\s+you)"
+    weight: 30
+    category: "SEMANTIC_JAILBREAK"
+    languages: ["en"]
+
+  - id: "INJ_008"
+    description: "Attempt to probe system or internal prompts"
+    pattern: "(?i)(system\\s+prompt|internal\\s+instructions|hidden\\s+rules|policy\\s+prompt)"
+    weight: 50
+    category: "INFORMATION_EXTRACTION"
+    languages: ["en"]
+
+  - id: "INJ_009"
+    description: "Policy-aware social engineering attempt"
+    pattern: "(?i)(i\\s+know\\s+you\\s+(can'?t|cannot)|i\\s+understand\\s+the\\s+rules|not\\s+asking\\s+you\\s+to\\s+break)"
+    weight: 25
+    category: "SOCIAL_ENGINEERING"
+    languages: ["en"]
+
+  # Spanish Rules
+  - id: "INJ_ES_001"
+    description: "Direct instruction override (Spanish)"
+    pattern: "(?i)(ignora|olvida|omite)\\s+(todas\\s+)?(las\\s+)?(instrucciones|ordenes|directrices)\\s+(anteriores|previas)"
+    weight: 50
+    category: "INSTRUCTION_OVERRIDE"
+    languages: ["es"]
+
+  # French Rules
+  - id: "INJ_FR_001"
+    description: "Direct instruction override (French)"
+    pattern: "(?i)(ignore|cublie|ne pas tenir compte)\\s+(de\\s+)?(toutes\\s+)?(les\\s+)?(instructions|commandes|directives)\\s+(précédentes|avant)"
+    weight: 50
+    category: "INSTRUCTION_OVERRIDE"
+    languages: ["fr"]
