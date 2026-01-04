@@ -34,7 +34,8 @@ def sanitize():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({"status": "ok", "service": "Antigravity Prompt Guard"})
+    return jsonify({"status": "ok", "service": "ThrillCircuit Prompt Guard"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
